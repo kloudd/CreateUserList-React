@@ -7,7 +7,7 @@ import { DrawerNavigator, DrawerItems } from "react-navigation";
 
 //custom files
 import CreateClient from "./screens/CreateClient";
-import ClientList from "./ClientList";
+import ClientList from "./screens/ClientList";
 
 export default class App extends Component {
   render() {

@@ -8,6 +8,8 @@ import {
   AsyncStorage
 } from "react-native";
 var ImagePicker = require("react-native-image-picker");
+import PushNotification from "react-native-push-notification";
+import PushController from "./PushController.js";
 
 import { Container, Content, Icon } from "native-base";
 import CustomHeader from "../Components/CustomHeader";
@@ -27,9 +29,36 @@ class CreateClient extends Component {
       number: "",
       whatsapp: "",
       error: "",
-      avatarSource: ""
+      avatarSource: require("../assets/DrawerIcons/profile.png")
     };
     this.copyToWhatsapp = this.copyToWhatsapp.bind(this);
+    this.handleAppStateChange = this.handleAppStateChange.bind(this);
+    this.sendNotification = this.sendNotification.bind(this);
+  }
+
+  componentDidMount() {
+    AppState.addEventListener("change", this.handleAppStateChange);
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener("change", this.handleAppStateChange);
+  }
+
+  // This will notify the user in 3 seconds after sending the app to the
+  // background (like after pressing the home button or switching apps)
+  handleAppStateChange(appState) {
+    if (appState === "background") {
+      // Schedule a notification
+      PushNotification.localNotificationSchedule({
+        message: "Scheduled delay notification message", // (required)
+        date: new Date(Date.now() + 3 * 1000) // in 3 secs
+      });
+    }
+  }
+  sendNotification() {
+    PushNotification.localNotification({
+      message: "You pushed the notification button!"
+    });
   }
 
   static navigationOptions = ({ navigation }) => ({
@@ -96,6 +125,9 @@ class CreateClient extends Component {
           this.state.email.toString(),
           JSON.stringify(this.state)
         );
+        this.sendNotification();
+
+        this.props.navigation.navigate("List");
 
         break;
       default:
@@ -116,6 +148,7 @@ class CreateClient extends Component {
         console.log("User tapped custom button: ", response.customButton);
       } else {
         let source = { uri: response.uri };
+        console.log(source);
 
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
@@ -142,10 +175,9 @@ class CreateClient extends Component {
             padding: 10
           }}
         >
-          <Text style={styles.header}>Create New Client</Text>
           <Image
             source={this.state.avatarSource}
-            style={{ width: 200, height: 200, margin: 10 }}
+            style={{ width: 100, height: 100, borderRadius: 100 }}
           />
           <TouchableOpacity style={styles.button} onPress={this.takePhoto}>
             <Text style={styles.btntext}> TakePhoto </Text>
@@ -211,7 +243,7 @@ const styles = StyleSheet.create({
   textinput: {
     alignSelf: "stretch",
     height: 40,
-    marginBottom: 30,
+    marginBottom: 10,
     color: "black",
     borderBottomColor: "#f8f8f8",
     borderBottomWidth: 1

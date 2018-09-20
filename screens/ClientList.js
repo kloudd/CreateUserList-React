@@ -76,11 +76,13 @@ class ClientList extends Component {
   render() {
     if (this.state.data.length != 0) {
       return (
-        <View>
-          <CustomHeader
-            title="Client List"
-            drawerOpen={() => this.props.navigation.navigate("DrawerOpen")}
-          />
+        <View style={{ flex: 1 }}>
+          <View>
+            <CustomHeader
+              title="Client List"
+              drawerOpen={() => this.props.navigation.navigate("DrawerOpen")}
+            />
+          </View>
 
           <View contentContainerStyle={styles.contentContainerStyle}>
             <List>
@@ -89,6 +91,16 @@ class ClientList extends Component {
                 keyExtractor={(x, i) => i}
                 renderItem={({ item }) => (
                   <View style={styles.clientrow}>
+                    <Image
+                      style={styles.icon}
+                      source={item.avatarSource}
+                      style={{
+                        width: 30,
+                        height: 30,
+                        borderRadius: 100,
+                        marginLeft: 10
+                      }}
+                    />
                     <Text style={styles.clientrowtext}>{item.name}</Text>
                     <TouchableOpacity
                       style={styles.btn}
@@ -112,19 +124,31 @@ class ClientList extends Component {
                 )}
               />
             </List>
-            <TouchableOpacity
-              onPress={() => this.props.navigation.navigate("Create")}
-              style={styles.fab}
-            >
-              <Text style={styles.fabIcon}>+</Text>
-            </TouchableOpacity>
           </View>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate("Create")}
+            style={styles.fab}
+          >
+            <Text style={styles.fabIcon}>+</Text>
+          </TouchableOpacity>
         </View>
       );
     } else {
       return (
-        <View>
-          <Text>Loading...</Text>
+        <View style={{ flex: 1 }}>
+          <View>
+            <CustomHeader
+              title="Client List"
+              drawerOpen={() => this.props.navigation.navigate("DrawerOpen")}
+            />
+          </View>
+
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate("Create")}
+            style={styles.fab}
+          >
+            <Text style={styles.fabIcon}>+</Text>
+          </TouchableOpacity>
         </View>
       );
     }
@@ -142,14 +166,17 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    padding: 10
+    padding: 10,
+    backgroundColor: "red"
   },
   btn: {
     flex: 2,
     flexDirection: "row"
   },
   clientrowtext: {
-    flex: 6
+    flex: 6,
+    marginLeft: 10,
+    marginTop: 5
   },
 
   clientrow: {
